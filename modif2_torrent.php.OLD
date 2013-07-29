@@ -1,0 +1,210 @@
+﻿<?php
+session_start();
+
+if (!isset($_SESSION['login'])) {
+   header ('Location: login.php');
+   exit();
+}
+
+require("include/settings.php");
+require("include/config.php");
+require("include/functions.php");
+
+// connexion SQL
+$base = mysql_connect ($serveurdb, $logindb, $passworddb);
+mysql_select_db ($basedb, $base);
+
+//récupération des valeurs des champs
+$nomtorrent = addslashes($_POST['nom']);
+$descriptiontorrent = addslashes($_POST['description']);
+$urltorrent = $_POST['urltorrent'];
+$id = htmlentities($_POST['id']);
+$categorietorrent = addslashes($_POST['categorie']);
+$licencetorrent = addslashes($_POST['licence']);
+$imagetorrent = $_FILES['fichier']['name'];
+$chemin_destination = $CHEMINSITE.'/images/imgtorrents/';
+
+// *******************************************************************
+// SECURITE DE LA PAGE
+//********************************************************************
+// Recherche si le user est admin ... Sinon, il n'a pas le droit de modifier le torrent
+$sql1 = "SELECT * FROM users WHERE nomuser='".$_SESSION["login"]."'";
+$req1 = mysql_query($sql1) or die('Erreur SQL !<br>'.$sql1.'<br>'.mysql_error());
+$result = mysql_fetch_assoc($req1);
+
+if ($result['isadmin'] == 0) {
+	$erreur="Désolé : vous ne pouvez pas afficher cette page !";
+}
+
+// on vérifie aussi que n'utilise pas la page sans id
+if (!isset($id) || !$id || !is_numeric($id))
+    	$erreur="Erreur : vous ne pouvez pas accéder à cette page directement ou mauvais ID : $id";
+
+// ******************************************************************
+// Affichage des éventuelles erreurs propres à l'upload du fichier
+// ******************************************************************
+
+// on vérifie l'extension du fichier : que du jpg, png ou gif
+$nomOrigine = $_FILES['fichier']['name'];
+$elementsChemin = pathinfo($nomOrigine);
+$extensionFichier = $elementsChemin['extension'];
+$extensionsAutorisees = array("png", "jpg", "gif");
+
+if (!(in_array($extensionFichier, $extensionsAutorisees))) {
+    	$erreur="L'image du torrent n'a pas l'extension attendue. Choisissez une image avec l'une des extensions suivantes : png, jpg ou gif.";
+} // fin if
+
+// puis, on vérifie les erreurs liées à $_FILES['fichier']['error'] :
+// la taille du fichier (max 100 ko), la taille dans le formulaire, une erreur de transfert
+// ou une valeur nulle pour la taille du fichier
+else if ($_FILES['fichier']['error']) {
+          switch ($_FILES['fichier']['error']){
+                   case 1: // UPLOAD_ERR_INI_SIZE
+                   $erreur="L'image dépasse la limite de taille autorisée !";
+                   break;
+                   case 2: // UPLOAD_ERR_FORM_SIZE
+                   $erreur="L'image dépasse la limite autorisée dans le formulaire HTML !";
+                   break;
+                   case 3: // UPLOAD_ERR_PARTIAL
+                   $erreur="L'envoi de l'image a été interrompu pendant le transfert !";
+                   break;
+                   case 4: // UPLOAD_ERR_NO_FILE
+                   $erreur="L'image que vous avez envoyée a une taille nulle !";
+                   break;
+         } // fin switch
+} // fin else if
+
+else if
+// on vérifie que le nom a été soumis (preuve que le formulaire a été envoyé ... et qu'il n'y a pas d'erreur
+((isset($_FILES['fichier']['name'])&&($_FILES['fichier']['error'] == UPLOAD_ERR_OK))) {
+
+// on upload le fichier ...
+move_uploaded_file($_FILES['fichier']['tmp_name'], $chemin_destination.$_FILES['fichier']['name']);
+
+// Il n'y a aucune erreur ? On affiche le résultat !
+$ok = '<h4 style="color: green;">La modification a été correctement effectuée.</h4><br>' ;
+
+} // fin else if
+
+else $erreur="Il y a un Schmilblik quelque part ...";
+
+// ****************************
+// REQUETE SQL
+// ****************************
+
+//création de la requête SQL pour mettre à jour les infos du pseudo, de l'e-mail et du nom de l'avatar
+$sql = "UPDATE torrents SET nom_torr = '$nomtorrent', description_torr = '$descriptiontorrent', url_torr = '$urltorrent', cat_torr = '$categorietorrent', licence_torr = '$licencetorrent', image_torr = '$imagetorrent' WHERE id_torr = '$id' " ;
+
+// on envoie la requête SQL
+$req = mysql_query($sql) or die('Erreur SQL !<br>'.$sql.'<br>'.mysql_error());
+
+// on coupe la connexion SQL
+mysql_close();
+
+?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="<?php echo $DEFAULTLANGUAGE; ?>" xmlns="http://www.w3.org/1999/xhtml" dir="ltr">
+<head>
+        <title><?php echo $SITENAME; ?></title>
+        <meta http-equiv="Content-type" content="text/html; charset=<?php echo $DEFAULTCHARSET; ?>" />
+        <link rel="stylesheet" href="<?php echo $DEFAULTSTYLE; ?>" type="text/css" media="all" />
+        <!--[if IE 6]>
+                <link rel="stylesheet" href="css/ie6.css" type="text/css" media="all" />
+        <![endif]-->
+        <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="js/jquery-func.js"></script>
+</head>
+<body>
+
+<!-- Shell -->
+<div id="shell">
+
+        <!-- Header -->
+        <div id="header">
+                <!-- Logo -->
+                <h1 id="logo"><a href="index.php"><?php echo $SITENAME; ?></a></h1>
+                <!-- /Logo -->
+                <div class="top-bar">
+                        <!-- Header Links -->
+                        <div class="links">
+                                <?php
+                                   include("header-links.php");
+                                ?>
+                        </div>
+                        <!-- /Header Links -->
+
+                        <div class="cl">&nbsp;</div>
+
+                        <!-- Search -->
+                        <div id="search">
+                                <form action="recherche.php" method="post">
+                                        <!--<label for="search-string">IM LOOKING FOR</label>-->
+                                        <div class="fields">
+                                                <input type="text" value="Rechercher ..." title="Rechercher ..." id="search-string" name="requete" class="field" />
+                                                <input type="submit" value="" class="submit" />
+                                        </div>
+                                </form>
+                        </div>
+                        <!-- /Search -->
+                </div>
+        </div>
+        <!-- /Header -->
+
+<!-- Navigation -->
+        <?php
+           include_once("navigation.php");
+        ?>
+<!-- /Navigation -->
+
+	
+<!-- Main -->
+<div id="main">
+	
+	<!-- Content -->
+	<div id="content">
+
+	<div class="box last">
+	<h2><span>Modification du torrent</span></h2>
+	<br /><br /><br />
+
+
+<?php
+// si une erreur est survenue lors de la soumission du formulaire, on l'affiche
+if (isset($erreur)) {
+echo '<br /><h4 style="color: red;">ERREUR : ' . $erreur . '</h4>';
+}
+else {
+echo $ok;
+}
+?>
+
+	<br /><br />
+
+	</div>			
+									
+		<div class="cl">&nbsp;</div>	
+
+	</div><!-- /Content -->
+		
+		<!-- sidebar -->
+		<?php
+		   include_once("sidebar.php");
+		?>
+		
+		<div class="cl">&nbsp;</div>
+
+</div><!-- /Main -->
+	
+<!-- bottom et footer -->
+<?php
+   include_once("bottom.php");
+   include_once("footer.php");
+?>
+	
+</div>
+<!-- /Shell -->
+
+</body>
+
+</html>
