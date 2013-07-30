@@ -147,16 +147,16 @@ while($data = mysql_fetch_assoc($req))
 	//echo '<td class="servBodL"><a href="http://www.freenet.fr.nf/torrents/'.$data['fichier_torrent'].'"><img src="images/down.png" border="0" title="Télécharger le torrent" alt="Télécharger le torrent" /></a>
 	echo '<td class="tabcol" style="font-size: 8pt;"><b><a style="text-decoration:none;" href="detail.php?id='.$data['id_torr'].'">'.stripslashes($data['nom_torr']).'</a></b></td>';
    	 }
-        echo '<td class="tabcol" style="font-size: 8pt;">'.makesize($data['taille_torr']).'</td>';
-    	echo '<td class="tabcol" style="font-size: 8pt;">'.stripslashes($data['pseudo_torr']).'</td>';
-    	echo '<td class="tabcol"><span style="font-size:7pt;">'.gmdate('d-m-Y, H:i', $data['ctime']).'</span></td>';
+        echo '<td class="tabcol" style="font-size: 8pt; width: 9%;"">'.makesize($data['taille_torr']).'</td>';
+    	echo '<td class="tabcol" style="font-size: 8pt; width: 13%;"">'.stripslashes($data['pseudo_torr']).'</td>';
+    	echo '<td class="tabcol" style="font-size: 7pt; width: 13%;">'.gmdate('d-m-Y à H:i', $data['ctime']).'</td>';
 
     // Recherche de l'url de la licence du torrent
     $sql1 = "SELECT * FROM torrents LEFT JOIN licences ON torrents.licence_torr = licences.lnom WHERE torrents.id_torr='".$data['id_torr']."'";
     $req1 = mysql_query($sql1) or die('Erreur SQL !<br>'.$sql1.'<br>'.mysql_error());
     $result = mysql_fetch_assoc($req1);
 
-    	echo '<td class="tabcol" style="font-size: 8pt;"><a style="text-decoration:none;" href="'.stripslashes($result['lurl']).'">'.stripslashes($data['licence_torr']).'</a></td>';
+    	echo '<td class="tabcol" style="font-size: 7pt; width: 12%;"><a style="text-decoration:none;" href="'.stripslashes($result['lurl']).'">'.stripslashes($data['licence_torr']).'</a></td>';
     	echo '<td class="tabcol">'.stripslashes($data['seeders']).'</td>';
     	echo '<td class="tabcol">'.stripslashes($data['leechers']).'</td>';
     	echo '<td class="tabcol">'.stripslashes($data['completed']).'</td>';

@@ -246,10 +246,14 @@ $req2 = mysql_query($sql2) or die('Erreur SQL !<br>'.$sql2.'<br>'.mysql_error())
 while($data2 = mysql_fetch_assoc($req2))
     {
 	echo '<div id="comments2">';
-	echo '<p style="text-decoration: underline; font-size: 12px;">#'.$data2['cid'].'&nbsp;<span style="font-weight: bold;">' .$data2['ctitre']. '</span> - Par <a style="color: black;" href="membre-detail.php?id='.$data2['iduser'].'">'.stripslashes($data2['nomuser']).'</a>, 
-	le ' . $data2['cadded'] . '</p><p style="margin-left: 25px; text-align: justify;">'.stripslashes($data2['ctext']).'</p></p>';
-	//echo '<p style="text-align: right;">Le ' . $data2['cadded'] . '</p>';
-	echo '</div><br/>';
+		echo '<p style="text-decoration: underline; font-size: 12px;">';
+		echo '<img src="images/avatar/' . $data2['avatar'] . '" alt="' . $data2['nomuser'] . '" style="float: left; margin-right: 5px; max-width: 60px; max-height: 60px;" />';
+		echo '<span style="font-weight: bold;">Par <a style="color: black;" href="membre-detail.php?id='.$data2['iduser'].'">'.stripslashes($data2['nomuser']).'</a>, ';
+
+		// on décompose la date
+    		sscanf($data2['cadded'], "%4s-%2s-%2s %2s:%2s:%2s", $annee, $mois, $jour, $heure, $minute, $seconde);
+    		echo 'le '.$jour.'-'.$mois.'-'.$annee.' à '.$heure.':'.$minute.':'.$seconde.'</p><br/><p style="text-align: justify; font-size: 12px;">'.stripslashes($data2['ctext']).'</p>';
+		echo '<br/></div><br/>';
     } // fin while $data2
 	echo '<br /><p style="font-weight:bold; text-align: center;"><a href="comment.php?id='.$id.'&user='.stripslashes($data['pseudo_torr']).'">Laissez un commentaire pour "<span style="font-size:9pt; color:blue; font-weight:bold; font-style:italic;">'.stripslashes($data['nom_torr']).'</span>"</a></p><br /><br />';
 
