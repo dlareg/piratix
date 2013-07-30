@@ -34,6 +34,13 @@ if($_POST) {
         <![endif]-->
         <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
         <script type="text/javascript" src="js/jquery-func.js"></script>
+
+	<script src="js/tinymce/tinymce.min.js"></script>
+	<script>
+        	tinymce.init({selector:'textarea'});
+	</script>
+
+
 </head>
 <body>
 
@@ -85,14 +92,14 @@ if($_POST) {
 	<div id="content">
 
 <?php
-// on recupere l'id et le user
+// on recupere l'id du torrent et le nom du user
 $id = $_GET['id'];
 $user = addslashes($_SESSION['login']);
 
-$insert="SELECT * FROM torrents WHERE id_torr='" . $id . "'";
-$result=mysql_query($insert) or die('Erreur SQL !<br>'.$result.'<br>'.mysql_error());
+$sql = "SELECT * FROM torrents WHERE id_torr='" . mysql_real_escape_string($id) . "'";
+$req = mysql_query($sql) or die('Erreur SQL !<br>'.$sql.'<br>'.mysql_error());
+$result = mysql_fetch_assoc($req);
 ?>
-
 	<div class="box last">
 	<h2><span>Proposer un commentaire pour <?php echo $result['nom_torr']; ?></span></h2>
 	<br /><br /><br />

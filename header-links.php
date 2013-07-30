@@ -4,7 +4,7 @@ if (isset($_SESSION['login'])) {
 	<table style="width: 100%;">
 	 <tr>
 	   <td><a href="#">Bienvenue <?php echo stripslashes(htmlentities(trim($_SESSION['login']))); ?> !</a>
-		<span style="font-weight: bold;"><a href="logout.php">Déconnexion</a></span>
+		<span style="font-weight: bold;"><a href="logout.php"><img src="images/logout.gif" alt="logout !" style="float: left; margin-right: 5px; max-width: 12px; max-height: 12px;" />Déconnexion</a></span>
 	   </td>
 	 </tr>
 
@@ -24,7 +24,7 @@ if (isset($_SESSION['login'])) {
 	//}  
 	//else {
 	
-	echo '<tr><td><a href="lire_message.php">Messagerie ( <span style="color: orange;">' . $nb . '</span> )</a>'; 
+	echo '<tr><td><a href="lire_message.php"><img src="images/msg.gif" alt="Vos messages" style="float: left; margin-right: 5px; max-width: 12px; max-height: 12px;" />Messagerie ( <span style="color: orange;">' . $nb . '</span> )</a>'; 
    		// si on a des messages, on affiche le nombre de message avec un lien vers la page lire.php
    		//while ($data = mysql_fetch_array($req)) { 
       		   //echo '<a href="lire_message.php?id_message=' . $data['id_message'] . '"><span style="color: orange;">' . $nb . '</span></a>'; 
@@ -44,7 +44,7 @@ if (isset($_SESSION['login'])) {
 	$id = $result0['iduser'];
 	?>
 
-		<a href="moncompte.php?id=<?php echo $id; ?>">Mon compte</a>
+		<a href="moncompte.php?id=<?php echo $id; ?>"><img src="images/profil.gif" alt="Votre profil" style="float: left; margin-right: 5px; max-width: 12px; max-height: 12px;" />Mon compte</a>
 
 	<?php
 	$sql = "SELECT * FROM xbt_users WHERE uid='" . $id . "'";

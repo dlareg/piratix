@@ -10,8 +10,8 @@
     $ANNOUNCEURL = $SITEURL . ":" . $PORTANNOUNCE . "/announce";
 
     $MAILSITE="contact@piratix.mumbly58.net";
-    $SITEVERSION="0.1.23-b";
-    $SITEVERSIONDATE="23/07/13";
+    $SITEVERSION="0.1.24-b";
+    $SITEVERSIONDATE="30/07/13";
 
 //Répertoires
     $CHEMINSITE="/var/www/piratix.mumbly58.net/web";

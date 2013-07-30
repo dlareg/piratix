@@ -24,6 +24,11 @@ require("include/functions.php");
         <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
         <script type="text/javascript" src="js/jquery-func.js"></script>
 
+        <script src="js/tinymce/tinymce.min.js"></script>
+        <script>
+                tinymce.init({selector:'textarea'});
+        </script>
+
 </head>
 <body>
 
@@ -109,7 +114,7 @@ require("include/functions.php");
    <tr><td>&nbsp;</td></tr>
 
    <tr>
-      <td class="tableTitle" style="width: 200px;">
+      <td class="tableTitle">
 	<span style="color:red; font-weight:bold;">*</span> Fichier torrent :
       </td>
       <td>
@@ -126,14 +131,14 @@ require("include/functions.php");
       </td>
    </tr>
       <td class="tableTitle">
-	Votre pseudo :
+	<span style="color:red; font-weight:bold;">*</span> Votre pseudo :
       </td>
       <td>
 	<INPUT type="text" name="pseudo" size="40" value="<?php echo $_SESSION['login']; ?>" disabled; readonly>
       </td>
    </tr>
       <td class="tableTitle">
-	<span style="color:red; font-weight:bold;">*</span> URL d'origine du fichier :
+	<span style="color:red; font-weight:bold;">*</span> URL d'origine :
       </td>
       <td>
 	<INPUT type="text" name="urltorr" size="40">
@@ -141,7 +146,7 @@ require("include/functions.php");
    </tr>
    <tr>
       <td class="tableTitle">
-	<span style="color:red; font-weight:bold;">*</span> Catégorie du fichier :
+	<span style="color:red; font-weight:bold;">*</span> Catégorie :
       </td>
       <td>
         <SELECT name="categorie">
@@ -157,7 +162,7 @@ require("include/functions.php");
    </tr>
    <tr>
       <td class="tableTitle">
-	<span style="color:red; font-weight:bold;">*</span> Licence du fichier :
+	<span style="color:red; font-weight:bold;">*</span> Licence :
       </td>
       <td>
 	<SELECT name="licence">
@@ -184,7 +189,7 @@ require("include/functions.php");
    </tr>
    <tr>
       <td class="tableTitle">
-	<br /><span style="color:red; font-weight:bold;">*</span> Description du torrent :
+	<br /><span style="color:red; font-weight:bold;">*</span> Description :
       </td>
       <td>
 	<TEXTAREA rows="15" cols="58" name="description"></TEXTAREA>

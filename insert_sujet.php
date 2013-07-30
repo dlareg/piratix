@@ -69,6 +69,12 @@ if (isset ($_POST['go']) && $_POST['go']=='Poster') {
         <![endif]-->
         <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
         <script type="text/javascript" src="js/jquery-func.js"></script>
+	
+	<script src="js/tinymce/tinymce.min.js"></script>
+        <script>
+                tinymce.init({selector:'textarea'});
+        </script>
+
 </head>
 <body>
 
